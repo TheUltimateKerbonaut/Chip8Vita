@@ -12,7 +12,7 @@ Please feel free to contribute to the project if you want to. I'll welcome any c
 * **Luka Warren** - *Initial work* - [GitHub](https://github.com/TheUltimateKerbonaut/)
 
 ## License
-This project is licensed under the Mozilla Public License 2.0  License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the Mozilla Public License 2.0  License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgements
 * [VitaSDK](https://vitasdk.org/) - Toolchain
