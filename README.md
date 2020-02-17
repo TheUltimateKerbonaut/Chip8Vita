@@ -11,6 +11,15 @@ Please feel free to contribute to the project if you want to. I'll welcome any c
 ## Authors
 * **Luka Warren** - *Initial work* - [GitHub](https://github.com/TheUltimateKerbonaut/)
 
+## Building
+Make sure you have [VitaSDK](https://github.com/vitasdk) installed, then run the following:
+```
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
+
 ## License
 This project is licensed under the Mozilla Public License 2.0  License - see the [LICENSE](LICENSE) file for details
 
