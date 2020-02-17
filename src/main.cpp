@@ -105,6 +105,7 @@ int main()
 				chip8.doEmulationCycle();
 				display.drawChip8(chip8);
 
+				#ifdef DEBUG_CHIP8
 				for (int i = 0; i < 16; ++i)
 				{
 					display.print(20, 20 + i*20, white, std::to_string(chip8.io.keys[i]));
@@ -114,6 +115,7 @@ int main()
 				display.print(120, 20 + 1*20, white, "ry " + std::to_string(pad_data.ry));
 				display.print(120, 20 + 2*20, white, "lx " + std::to_string(pad_data.lx));
 				display.print(120, 20 + 3*20, white, "ly " + std::to_string(pad_data.ly));
+				#endif
 
 				if (ctrl.buttons & SCE_CTRL_START) screen = gameSelectScreen;
 
