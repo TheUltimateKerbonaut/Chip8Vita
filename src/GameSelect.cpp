@@ -55,8 +55,10 @@ int GameSelect::renderFrame(int selectedLabel, int& maxLabels, Display& display,
     for (int i = scrollAmount; i < fileCount; ++i)
         display.printCenter(960/2, 300 + display.textHeight[1] * (i-scrollAmount), (selectedLabel == i) ? selectedColour : defaultColour, 1.0f, romFiles[i].name);
 
+    if (fileCount == 0) display.printCenter(900/2, 300, defaultColour, "Error: No .ch8 files in ux0:app/LUKA00001/roms/");
+
 	maxLabels = fileCount-1;
-	if (ctrl.buttons & SCE_CTRL_CROSS)
+	if (ctrl.buttons & SCE_CTRL_CROSS && fileCount > 0)
 	{
         chip8.init();
         chip8.loadROM(ROM(std::string(romFiles[selectedLabel].name), romFiles[selectedLabel].metadata.st_size));
