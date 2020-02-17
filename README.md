@@ -3,7 +3,7 @@ Chip8 Emulator for the PS Vita. **The VPK includes all the ROMs you'll ever need
 Currently the project is in no way optimised, so runs below full speed.
 
 ### Installing
-Install the VPK under releases just like any other homebrew app, under ux0.
+Install [the VPK](https://github.com/TheUltimateKerbonaut/Chip8Vita/releases/download/0.2.0/chip8_vita.vpk) under releases just like any other homebrew app, under ux0.
 
 ## Contributing
 Please feel free to contribute to the project if you want to. I'll welcome any changes :)
