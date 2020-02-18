@@ -15,17 +15,17 @@ Display::Display()
 	pgf = vita2d_load_default_pgf();
 	//vita2d_set_vblank_wait(1);
 
-	for (int i = 0; i < sizeof(textHeight) / sizeof(textHeight[0]); ++i)
+	for (unsigned int i = 0; i < sizeof(textHeight) / sizeof(textHeight[0]); ++i)
 		textHeight[i] = vita2d_pgf_text_width(pgf, i+1, "A");
 
 	texture = vita2d_create_empty_texture(64, 32);
 	texture_data = (unsigned int*) vita2d_texture_get_datap(texture);
 }
 
-void Display::beginFrame()
+void Display::beginFrame(bool clearScreen)
 {
     vita2d_start_drawing();
-	vita2d_clear_screen();
+	if (clearScreen) vita2d_clear_screen();
 }
 
 void Display::endFrame()
@@ -61,19 +61,16 @@ void Display::drawChip8(Chip8& chip8)
 	// Draw display
 	if (chip8.cpu.drawFlag)
 	{
-		for (unsigned int x = 0; x < 64; ++x)
+		for (unsigned int i = 0; i < 64*32; ++i)
 		{
-			for (unsigned int y = 0; y < 32; ++y)
-			{
-				texture_data[x+y*64] = chip8.io.pixels[x+y*64] ? white : black;
-			}
+			texture_data[i] = chip8.io.pixels[i] ? white : black;
 		}
 		chip8.cpu.drawFlag = false;
 	}
 
 	vita2d_draw_texture_scale(texture, 0, 32, 15, 15);
 
-	printCenter(960/2, 30, RGBA8(255, 255, 255, 255), 1.0f, "Press start to go back");
+	printCenter(960/2, 20, white, "Press start to go back");
 }
 
 Display::~Display()

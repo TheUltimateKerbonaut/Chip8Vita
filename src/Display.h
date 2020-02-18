@@ -7,6 +7,10 @@
 
 #include "Chip8.h"
 
+#ifdef DEBUG_CHIP8
+#include <chrono>
+#endif
+
 extern unsigned int defaultColour;
 extern unsigned int selectedColour;
 extern unsigned int titleColour;
@@ -19,7 +23,7 @@ class Display
         Display();
         ~Display();
 
-        void beginFrame();
+        void beginFrame(bool clearScreen);
         void endFrame();
 
         void print(int x, int y, unsigned int colour, std::string string);
@@ -31,10 +35,22 @@ class Display
 
         int textHeight[4];
 
-    private:
         vita2d_pgf *pgf;
+
+    private:
         vita2d_texture* texture;
         unsigned int* texture_data;
+
+        #ifdef DEBUG_CHIP8
+
+            std::chrono::time_point<std::chrono::high_resolution_clock> startUpdate;
+	        std::chrono::time_point<std::chrono::high_resolution_clock> stopUpdate;
+	        int32_t  durationUpdate;
+            std::chrono::time_point<std::chrono::high_resolution_clock> startDraw;
+	        std::chrono::time_point<std::chrono::high_resolution_clock> stopDraw;
+	        int32_t  durationDraw;
+
+        #endif
 };
 
 #endif

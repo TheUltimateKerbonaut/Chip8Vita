@@ -13,7 +13,7 @@ public:
 
 	ROM(std::string fileName, SceOff size);
 
-	std::vector<unsigned char> buffer;
+	std::vector<unsigned char> buffer = std::vector<unsigned char>();
 
 };
 

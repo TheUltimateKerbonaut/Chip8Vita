@@ -1,7 +1,10 @@
 #include "GameSelect.h"
 
-#include <psp2/io/dirent.h> 
+#include <psp2/io/dirent.h>
+
+#ifdef DEBUG_CHIP8
 #include <debugnet.h>
+#endif
 
 #include <string>
 
@@ -11,7 +14,6 @@ GameSelect::GameSelect()
 {
     SceIoDirent dir;
     memset(&dir, 0, sizeof(SceIoDirent));
-
 
     SceUID dfd;
     dfd = sceIoDopen("app0:/roms");
@@ -38,9 +40,7 @@ GameSelect::GameSelect()
     sceIoDclose(dfd);
 
     #ifdef DEBUG_CHIP8
-		debugNetPrintf(DEBUG,"Files: %d\n", fileCount);
-        for (int i = 0; i < fileCount; ++i)
-            debugNetPrintf(DEBUG,"%s\n", romFiles[i].name);
+		debugNetPrintf(DEBUG,"ROM Files: %d\n", fileCount);
 	#endif
 }
 
@@ -52,8 +52,8 @@ int GameSelect::renderFrame(int selectedLabel, int& maxLabels, Display& display,
     if (selectedLabel > 3) scrollAmount = selectedLabel - 3;
     else scrollAmount = 0;
 
-    for (int i = scrollAmount; i < fileCount; ++i)
-        display.printCenter(960/2, 300 + display.textHeight[1] * (i-scrollAmount), (selectedLabel == i) ? selectedColour : defaultColour, 1.0f, romFiles[i].name);
+    for (unsigned int i = scrollAmount; i < fileCount; ++i)
+        display.printCenter(960/2, 300 + display.textHeight[1] * (i-scrollAmount), ((unsigned int)selectedLabel == i) ? selectedColour : defaultColour, 1.0f, romFiles[i].name);
 
     if (fileCount == 0) display.printCenter(900/2, 300, defaultColour, "Error: No .ch8 files in ux0:app/LUKA00001/roms/");
 
@@ -74,5 +74,5 @@ int GameSelect::renderFrame(int selectedLabel, int& maxLabels, Display& display,
 
 GameSelect::~GameSelect()
 {
-
+    
 }

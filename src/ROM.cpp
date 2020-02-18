@@ -5,6 +5,7 @@
 #include <debugnet.h>
 
 #include <string>
+#include <cstring>
 
 ROM::ROM(std::string fileName, SceOff size)
 {
@@ -13,15 +14,8 @@ ROM::ROM(std::string fileName, SceOff size)
 	SceUID fd = sceIoOpen(filePath.c_str(), SCE_O_RDONLY, 0777);
 	if (fd > 0)
 	{
-		void* voidBuf;
-		sceIoRead(fd, voidBuf, size);
-		unsigned char *charBuf = (unsigned char*)voidBuf;
-		buffer = std::vector<unsigned char>(charBuf, charBuf + size);
-
-		#ifdef DEBUG_CHIP8
-		    for (int i =0; i < buffer.size(); ++i)
-				debugNetPrintf(DEBUG,"0x%X\n", buffer[i]);
-	    #endif
+		buffer = std::vector<unsigned char>(size);
+		sceIoRead(fd, buffer.data(), size);
 	}
 	else
     {
@@ -31,4 +25,9 @@ ROM::ROM(std::string fileName, SceOff size)
     }
 
 	sceIoClose(fd);
+
+	#ifdef DEBUG_CHIP8
+		debugNetPrintf(DEBUG,"Loaded ROM %s\n", filePath.c_str());
+	#endif
+
 }
