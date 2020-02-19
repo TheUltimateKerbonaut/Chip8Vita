@@ -2,9 +2,9 @@
 
 #include <psp2/display.h>
 
-unsigned int defaultColour = RGBA8(255, 0, 0, 255);
-unsigned int selectedColour = RGBA8(0, 255, 0, 255);
-unsigned int titleColour = RGBA8(0, 0, 255, 255);
+unsigned int defaultColour = RGBA8(255, 255, 255, 255);
+unsigned int selectedColour = RGBA8(180, 180, 180, 255);
+unsigned int titleColour = RGBA8(255, 255, 255, 255);
 unsigned int white = RGBA8(255, 255, 255, 255);
 unsigned int black = RGBA8(0, 0, 0, 255);
 
