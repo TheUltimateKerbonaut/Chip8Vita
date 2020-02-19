@@ -1,5 +1,4 @@
 #include <psp2/kernel/processmgr.h>
-#include <psp2/ctrl.h> 
 #include <vita2d.h>
 
 #include "Display.h"
@@ -9,9 +8,6 @@
 #ifdef DEBUG_CHIP8
 #include <debugnet.h>
 #endif
-
-#include <chrono>
-#include <string>
 
 #define ip_server "192.168.1.228"
 #define port_server 18194
@@ -44,16 +40,9 @@ int main()
 	// Other screens
 	GameSelect gameSelect = GameSelect();
 
-	auto start = std::chrono::high_resolution_clock::now();
-	auto end = std::chrono::high_resolution_clock::now();
-	const int textXPos = 960 - vita2d_pgf_text_width(display.pgf, 1, "100FPS");
-
 	bool doRun = true;
 	while(doRun)
 	{
-		#ifdef DEBUG_CHIP8
-		start = std::chrono::high_resolution_clock::now();
-		#endif
 
 		sceCtrlPeekBufferPositive(0, &ctrl, 1);
 
@@ -97,6 +86,8 @@ int main()
 
 			case emulatorScreen:
 			{
+
+				// Actual emulaiton is occuring on seperate thread
 				chip8.io.keys[0] = (ctrl.buttons & SCE_CTRL_UP) ? 1 : 0;
 				chip8.io.keys[1] = (ctrl.buttons & SCE_CTRL_DOWN) ? 1 : 0;
 				chip8.io.keys[2] = (ctrl.buttons & SCE_CTRL_LEFT) ? 1 : 0;
@@ -114,7 +105,6 @@ int main()
 				chip8.io.keys[14] = pad_data.rx < max_negative;
 				chip8.io.keys[15] = pad_data.rx > max_positive;		
 
-				chip8.doEmulationCycle();
 				display.drawChip8(chip8);
 
 				#ifdef DEBUG_CHIP8
@@ -127,10 +117,16 @@ int main()
 				display.print(220, 20 + 1*20, white, "ry " + std::to_string(pad_data.ry));
 				display.print(220, 20 + 2*20, white, "lx " + std::to_string(pad_data.lx));
 				display.print(220, 20 + 3*20, white, "ly " + std::to_string(pad_data.ly));
+
+				std::string FPS = std::to_string((chip8.FPS)) + "FPS";
+				display.print(960 - vita2d_pgf_text_width(display.pgf, 1, FPS.c_str()), 25, white, 1.0f, FPS);
 				#endif
 
-				if (ctrl.buttons & SCE_CTRL_START) screen = gameSelectScreen;
-
+				if (ctrl.buttons & SCE_CTRL_START)
+				{
+					screen = gameSelectScreen;
+					chip8.stopEmulationThread();
+				}
 				break;
 			}
 			case about:
@@ -150,10 +146,6 @@ int main()
 
 			break;
 		}
-
-		end = std::chrono::high_resolution_clock::now();
-		float duration = (float) std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-		display.print(textXPos, 20, white, 1.0f, std::to_string((int)(1000.0f / duration)) + "FPS");
 
 		if (ctrl.buttons && screen != emulatorScreen) sceKernelDelayThread(delayInterval); // Delay for input
 

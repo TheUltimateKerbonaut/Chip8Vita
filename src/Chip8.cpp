@@ -2,6 +2,15 @@
 
 #include <iostream>
 #include <random>
+#include <functional>
+#include <chrono>
+#include <string>
+
+#ifdef DEBUG_CHIP8
+#include <debugnet.h>
+#endif
+
+bool Chip8::continueEmulation = false;
 
 void Chip8::init() // Initialise registers and memory
 {
@@ -396,4 +405,55 @@ void Chip8::doEmulationCycle()
 	if (timer.delayTimer > 0) timer.delayTimer--;
 	if (timer.soundTimer > 0) timer.soundTimer--;
 
+}
+
+// Thread for emulation
+int Chip8::emulateChip8(SceSize args, ThreadArguments* argp)
+{
+	Chip8* chip8 = argp->chip8;
+	#ifdef DEBUG_CHIP8
+		debugNetPrintf(DEBUG,"Emulation thread has started\n");
+	#endif
+
+	auto start = std::chrono::high_resolution_clock::now();
+	auto end = std::chrono::high_resolution_clock::now();
+	auto frameCapEnd = std::chrono::high_resolution_clock::now();
+	const double targetFramerateInMilliseconds = 1000 / 240;
+
+	while(Chip8::continueEmulation)
+	{
+		start = std::chrono::high_resolution_clock::now();
+		chip8->doEmulationCycle(); 
+		end = std::chrono::high_resolution_clock::now();
+		double difference = targetFramerateInMilliseconds - (double) std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+		sceKernelDelayThread(difference*1000);
+		frameCapEnd = std::chrono::high_resolution_clock::now();
+		chip8->FPS = 1000.0f / (double) std::chrono::duration_cast<std::chrono::milliseconds>(frameCapEnd - start).count();
+	}
+	#ifdef DEBUG_CHIP8
+		debugNetPrintf(DEBUG,"Emulation thread has stopped\n");
+	#endif
+
+	
+	return 0;
+}
+
+void Chip8::spawnEmulationThread(Chip8* chip8)
+{
+	continueEmulation = true;
+	emulationThread = sceKernelCreateThread("emulation_thread", (SceKernelThreadEntry)emulateChip8, 0x10000100, 0x10000, 0, 0, NULL);
+
+	ThreadArguments threadArguments;
+	threadArguments.chip8 = chip8;
+
+	if (emulationThread >= 0) sceKernelStartThread(emulationThread, sizeof(ThreadArguments), &threadArguments);
+	#ifdef DEBUG_CHIP8
+		debugNetPrintf(DEBUG,"Emulation thread id 0x%X\n", emulationThread);
+	#endif
+}
+
+void Chip8::stopEmulationThread()
+{
+	continueEmulation = false;
+	sceKernelDeleteThread(emulationThread);
 }

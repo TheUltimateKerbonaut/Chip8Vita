@@ -62,6 +62,7 @@ int GameSelect::renderFrame(int selectedLabel, int& maxLabels, Display& display,
 	{
         chip8.init();
         chip8.loadROM(ROM(std::string(romFiles[selectedLabel].name), romFiles[selectedLabel].metadata.st_size));
+        chip8.spawnEmulationThread(&chip8);
 		return 2;
 	}
     if (ctrl.buttons & SCE_CTRL_CIRCLE)

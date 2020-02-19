@@ -13,7 +13,7 @@ Display::Display()
 	vita2d_init();
 	vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
 	pgf = vita2d_load_default_pgf();
-	//vita2d_set_vblank_wait(1);
+	vita2d_set_vblank_wait(0);
 
 	for (unsigned int i = 0; i < sizeof(textHeight) / sizeof(textHeight[0]); ++i)
 		textHeight[i] = vita2d_pgf_text_width(pgf, i+1, "A");
@@ -70,7 +70,7 @@ void Display::drawChip8(Chip8& chip8)
 
 	vita2d_draw_texture_scale(texture, 0, 32, 15, 15);
 
-	printCenter(960/2, 20, white, "Press start to go back");
+	printCenter(960/2, 25, white, "Press start to go back");
 }
 
 Display::~Display()

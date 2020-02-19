@@ -5,6 +5,9 @@
 
 #include "ROM.h"
 
+#include <psp2/kernel/processmgr.h>
+#include <psp2/kernel/threadmgr.h>
+
 /*
 
 0x000-0x1FF - Chip 8 interpreter (contains font set in emu)
@@ -49,9 +52,14 @@ public:
 	void loadROM(ROM rom);
 	void doEmulationCycle();
 
+	void spawnEmulationThread(Chip8* chip8);
+	void stopEmulationThread();
+
 	IO io;
 	CPU cpu;
 	Timer timer;
+
+	double FPS = 0;
 
 private:
 
@@ -76,6 +84,16 @@ private:
 		0xF0, 0x80, 0xF0, 0x80, 0xF0, //E
 		0xF0, 0x80, 0xF0, 0x80, 0x80  //F
 	};
+
+	typedef struct {
+		Chip8* chip8;
+	} ThreadArguments;
+
+
+	SceUID emulationThread;
+	static bool continueEmulation;
+
+	static int emulateChip8(SceSize args, ThreadArguments* argp);
 
 };
 
