@@ -1,9 +1,11 @@
 # Chip8Vita
-Chip8 Emulator for the PS Vita. **The VPK includes all the ROMs you'll ever need.**
-Currently the project is in no way optimised, so runs below full speed.
+Chip8 Emulator for the PS Vita. **The VPK includes all the ROMs you'll ever need.** Runs at full speed.
 
-### Installing
-Install [the VPK](https://github.com/TheUltimateKerbonaut/Chip8Vita/releases/download/0.2.0/chip8_vita.vpk) under releases just like any other homebrew app, under ux0.
+## Installing
+Install [the VPK](https://github.com/TheUltimateKerbonaut/Chip8Vita/releases/download/0.3.0/chip8_vita.vpk) under releases just like any other homebrew app, under ux0.
+
+## Performance
+The emulator can push about 125,000FPS if left uncapped! I've limited the FPS to 250, and it runs perfectly. If you would like to change the FPS, you can change the `targetFramerateInMilliseconds` variable in Chip8.cpp.
 
 ## Contributing
 Please feel free to contribute to the project if you want to. I'll welcome any changes :)
