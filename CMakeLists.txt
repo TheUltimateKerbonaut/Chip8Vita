@@ -56,6 +56,7 @@ add_executable(${PROJECT_NAME}
   src/GameSelect.cpp
   src/ROM.cpp
   src/Chip8.cpp
+  src/Audio.cpp
 )
 
 # Library to link to (drop the -l prefix). This will mostly be stubs.
@@ -78,6 +79,8 @@ target_link_libraries(${PROJECT_NAME}
   -ldebugnet
   -lSceNetCtl_stub
   -lSceNet_stub
+
+  -lSceAudio_stub
 )
 
 ## Create Vita files

@@ -4,6 +4,7 @@
 #include "Display.h"
 #include "GameSelect.h"
 #include "Chip8.h"
+#include "Audio.h"
 
 #ifdef DEBUG_CHIP8
 #include <debugnet.h>
@@ -26,6 +27,8 @@ int main()
 	Display display = Display();
 
 	Chip8 chip8 = Chip8();
+
+	Audio audio = Audio();
 
 	// Setup input
 	SceCtrlData ctrl;
@@ -122,11 +125,14 @@ int main()
 				display.print(960 - vita2d_pgf_text_width(display.pgf, 1, FPS.c_str()), 25, white, 1.0f, FPS);
 				#endif
 
+				audio.update(chip8);
+
 				if (ctrl.buttons & SCE_CTRL_START)
 				{
 					screen = gameSelectScreen;
 					chip8.stopEmulationThread();
 				}
+
 				break;
 			}
 			case about:
