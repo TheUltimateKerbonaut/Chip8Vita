@@ -68,6 +68,7 @@ target_link_libraries(${PROJECT_NAME}
   -lSceCtrl_stub
   -lScePgf_stub
   -lScePvf_stub
+  -lSceAppMgr_stub
   -lSceCommonDialog_stub
   -lfreetype
   -lpng
